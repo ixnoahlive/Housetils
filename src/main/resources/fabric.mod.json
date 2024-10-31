@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "housetils",
+	"version": "${version}",
+	"name": "Housetils",
+	"description": "Housing mod",
+	"authors": [
+		"ixNoah"
+	],
+	"contact": {},
+	"license": "All Rights Reserved",
+	"icon": "assets/housetils/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "live.ixnoah.housetils.Housetils",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"housetils.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.5",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*",
+		"silk-all": "*"
+	}
+}

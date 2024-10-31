@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "live.ixnoah.housetils.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ChatScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "ChatScreenMixin",
+    "ScreenMixin"
+    ]
+}
