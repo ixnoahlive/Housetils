@@ -6,5 +6,5 @@ import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(ClickEvent.class)
 public class ClickEventMixin {
-    @
+
 }
