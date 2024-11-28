@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow
@@ -26,11 +28,12 @@ public abstract class ScreenMixin {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     @Inject(method = "handleTextClick", at = @At("HEAD"))
+    @SuppressWarnings("UnstableApiUsage")
     public void housetils_handleTextClick(Style style, CallbackInfoReturnable<Boolean> cir) {
         if (style != null) {
             ClickEvent clickEvent = style.getClickEvent();
 
-            if (!hasShiftDown() && clickEvent != null && String.valueOf(clickEvent.getAction()) == "run_command_client") {
+            if (!hasShiftDown() && clickEvent != null && Objects.equals(String.valueOf(clickEvent.getAction()), "run_command_client")) {
                 String string = StringHelper.stripInvalidChars(clickEvent.getValue());
                 if (string.startsWith("/")) {
                     if (!ClientCommandInternals.executeCommand(string.substring(1))) {
@@ -41,6 +44,5 @@ public abstract class ScreenMixin {
                 }
             }
         }
-
     }
 }

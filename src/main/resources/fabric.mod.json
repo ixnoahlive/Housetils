@@ -23,11 +23,13 @@
 		"housetils.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.5",
-		"minecraft": "~1.21.1",
-		"java": ">=21",
-		"fabric-api": "*",
-		"fabric-language-kotlin": "*",
-		"owo": "0.12.15+1.21"
+		"fabricloader": ">=${fabricloader}",
+		"fabric-api": ">=${fabric_api}",
+		"fabric-language-kotlin": ">=${fabric_language_kotlin}",
+		"minecraft": ">=${minecraft}",
+		"java": ">=${java}",
+		"placeholder-api": ">=${placeholder_api}",
+		"silk-all": ">=${silk}",
+		"owo": ">=${owo_version}"
 	}
 }
