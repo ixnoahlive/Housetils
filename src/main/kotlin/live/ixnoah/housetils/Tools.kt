@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtIo
 import net.minecraft.nbt.NbtSizeTracker
-import net.minecraft.nbt.StringNbtReader
 import net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
@@ -21,6 +20,7 @@ import java.io.DataInputStream
 import java.util.Base64
 
 object Tools {
+    // TODO: formatText and formatUserText are identical, remove one of these methods or change the implementation of one of them.
     fun formatText(text: String): MutableText {
         val parser = NodeParser.merge(LegacyFormattingParser.ALL)
         return parser.parseNode(text).toText().copy()
@@ -35,12 +35,12 @@ object Tools {
         MinecraftClient.getInstance().player?.networkHandler?.sendChatCommand(command)
     }
 
-    fun chat(message: Text) {
-        MinecraftClient.getInstance().player?.sendMessage(message)
+    private fun chat(message: Text) {
+        MinecraftClient.getInstance().player?.sendMessage(message, false)
     }
 
     fun chat(text: String) {
-        MinecraftClient.getInstance().player?.sendMessage(formatText(text))
+        MinecraftClient.getInstance().player?.sendMessage(formatText(text), false)
     }
 
     fun chatError(message: String) {
@@ -69,7 +69,7 @@ object Tools {
         }
 
         fun readActions(stack: ItemStack): NbtCompound? {
-            val encodedData = stack.get(DataComponentTypes.CUSTOM_DATA)?.get(Codec.STRING.fieldOf("interact_data"))
+            val encodedData = stack[DataComponentTypes.CUSTOM_DATA]?.get(Codec.STRING.fieldOf("interact_data"))
                 ?: return null
 
             val encodedDataSplit = encodedData.result()?.toString()?.split(".") ?: return null
@@ -77,7 +77,7 @@ object Tools {
 
             val jsonPayload = Gson().fromJson(decodedPayload, JsonObject::class.java) ?: return null
 
-            val encodedActionNBT = jsonPayload.get("data").asString ?: return null
+            val encodedActionNBT = jsonPayload["data"].asString ?: return null
             val decodedActionNBT = Base64.getDecoder().decode(encodedActionNBT) ?: return null
 
             val inputStream = DataInputStream(ByteArrayInputStream(decodedActionNBT))

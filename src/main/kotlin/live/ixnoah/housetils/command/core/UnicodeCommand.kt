@@ -5,7 +5,7 @@ import net.silkmc.silk.commands.clientCommand
 import net.silkmc.silk.commands.player
 
 object UnicodeCommand {
-    val symbols = mapOf(
+    private val symbols = mapOf(
         "Stars" to "★☆✡✦✧✩✪✫✬✭✮✯✰✢✣✤✥✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❇❈❉❊❋❄❆❅⋆۞⭒⍟⭐",
         "SkyBlock" to "❁❤❈❂✦✎☣☠⚔⫽✯♣α๑⸕✧☘⸎ʬ♨᠅≈❣✆✪☀☽⏣✌♲☀⚠✿♪♫⓪ⓩ▲⁍⚚✖✔➜﴾﴿☬☄⚑Ⓑ☺♞✷⦾",
         "Brackets" to "【】《》『』〖〗〈〉﴾﴿",
@@ -40,7 +40,7 @@ object UnicodeCommand {
                 }
             }
 
-            source.player.sendMessage(text)
+            source.player.sendMessage(text, false)
         }
 
         alias("symbol")
