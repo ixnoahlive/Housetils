@@ -1,4 +1,4 @@
-package live.ixnoah.housetils.commands.core
+package live.ixnoah.housetils.command.core
 
 import net.minecraft.text.*
 import net.silkmc.silk.commands.clientCommand

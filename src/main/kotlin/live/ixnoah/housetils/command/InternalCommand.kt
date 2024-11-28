@@ -1,4 +1,4 @@
-package live.ixnoah.housetils.commands
+package live.ixnoah.housetils.command
 
 import live.ixnoah.housetils.mixin.ChatScreenMixin
 import net.minecraft.client.MinecraftClient
