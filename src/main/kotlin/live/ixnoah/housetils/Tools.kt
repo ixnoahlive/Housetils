@@ -15,17 +15,18 @@ import net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket
 import net.minecraft.text.MutableText
 import net.minecraft.text.Style
 import net.minecraft.text.Text
+import net.silkmc.silk.nbt.set
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
 import java.util.Base64
 
 object Tools {
-    // TODO: formatText and formatUserText are identical, remove one of these methods or change the implementation of one of them.
     fun formatText(text: String): MutableText {
         val parser = NodeParser.merge(LegacyFormattingParser.ALL)
         return parser.parseNode(text).toText().copy()
     }
 
+    // Exists to format text affected by user input. Currently identical, but exists for future proofing
     fun formatUserText(text: String): MutableText {
         val parser = NodeParser.merge(LegacyFormattingParser.ALL)
         return parser.parseNode(text).toText().copy()
@@ -35,7 +36,7 @@ object Tools {
         MinecraftClient.getInstance().player?.networkHandler?.sendChatCommand(command)
     }
 
-    private fun chat(message: Text) {
+    fun chat(message: Text) {
         MinecraftClient.getInstance().player?.sendMessage(message, false)
     }
 
@@ -81,8 +82,15 @@ object Tools {
             val decodedActionNBT = Base64.getDecoder().decode(encodedActionNBT) ?: return null
 
             val inputStream = DataInputStream(ByteArrayInputStream(decodedActionNBT))
+            val data = NbtIo.readCompressed(inputStream, NbtSizeTracker(2091752, 8))
+                ?: return null
 
-            return NbtIo.readCompressed(inputStream, NbtSizeTracker(2091752, 8))
+            if (data.get("actions") == null)
+                return null
+
+            data["source"] = encodedData.result().orElse(null)
+
+            return data
         }
 
     }

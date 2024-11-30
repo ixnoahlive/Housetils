@@ -2,18 +2,25 @@ package live.ixnoah.housetils.command.core
 
 import live.ixnoah.housetils.Tools
 import net.minecraft.component.DataComponentTypes
+import net.minecraft.component.type.NbtComponent
 import net.minecraft.component.type.UnbreakableComponent
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
+import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.Unit
 import net.silkmc.silk.commands.clientCommand
 import net.silkmc.silk.commands.player
 import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.nbt.set
 
 object ItemEditorCommand {
-    private fun checksumAndGetItem(player: PlayerEntity): ItemStack? {
-        if (!player.isCreative) {
+    var actionClipboard : String? = null
+
+    private fun checksumAndGetItem(player: PlayerEntity, creativeRequired: Boolean = true): ItemStack? {
+        if (!player.isCreative && creativeRequired) {
             Tools.chatError("You must be in Creative Mode to use this command!")
             return null
         }
@@ -122,8 +129,47 @@ object ItemEditorCommand {
 
         literal("actions") {
             literal("print") runs {
+                val heldItem = checksumAndGetItem(source.player, false) ?: return@runs
+                val actionData = Tools.Item.readActions(heldItem)
+                    ?: return@runs Tools.chatError("Could not read this item's actions! Does it have any?")
+
+                val actionList = actionData.get("actions") as NbtList
+
+                Tools.chatSuccess("Successfully decompiled ${actionList.size} actions!")
+                Tools.chat(Text.literal("$actionList").setStyle(Style.EMPTY.withColor(0x7777AA)))
+            }
+
+            literal("copy") runs {
+                val heldItem = checksumAndGetItem(source.player, false) ?: return@runs
+                val actionData = Tools.Item.readActions(heldItem)
+                    ?: return@runs Tools.chatError("Could not read this item's actions! Does it have any?")
+
+                actionClipboard = actionData.get("source")!!.asString()
+                Tools.chatSuccess("Successfully copied item actions! (Note: They are constrained to this house!)")
+            }
+
+            literal("paste") runs {
                 val heldItem = checksumAndGetItem(source.player) ?: return@runs
-                println(Tools.Item.readActions(heldItem).toString())
+
+                if (actionClipboard == null)
+                    return@runs Tools.chatError("Your clipboard is empty!")
+
+                val actionData = Tools.Item.readActions(heldItem)
+                println(actionClipboard)
+
+                if (actionData == null) {
+                    val newCustomData = NbtCompound()
+                    newCustomData["interact_data"] = actionClipboard!!
+
+                    heldItem.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newCustomData))
+                } else {
+                    val newCustomData = heldItem.get(DataComponentTypes.CUSTOM_DATA)!!.copyNbt()
+                    newCustomData["interact_data"] = actionClipboard!!
+
+                    heldItem.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newCustomData))
+                }
+
+                Tools.chatSuccess("Successfully pasted item actions onto held item!")
             }
         }
 
