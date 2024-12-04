@@ -156,7 +156,6 @@ object ItemEditorCommand {
                     return@runs Tools.chatError("Your clipboard is empty!")
 
                 val actionData = Tools.Item.readActions(heldItem)
-                println(actionClipboard)
 
                 if (actionData == null) {
                     val newCustomData = NbtCompound()
