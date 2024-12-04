@@ -14,6 +14,7 @@ import net.minecraft.util.Unit
 import net.silkmc.silk.commands.clientCommand
 import net.silkmc.silk.commands.player
 import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.nbt.dsl.nbtCompound
 import net.silkmc.silk.nbt.set
 
 object ItemEditorCommand {
@@ -170,6 +171,27 @@ object ItemEditorCommand {
                 }
 
                 Tools.chatSuccess("Successfully pasted item actions onto held item!")
+            }
+            literal("clear") runs {
+                val heldItem = checksumAndGetItem(source.player) ?: return@runs
+
+                val newCustomData = heldItem.get(DataComponentTypes.CUSTOM_DATA)?.copyNbt()
+
+                newCustomData?.remove("interact_data")
+                heldItem.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newCustomData))
+
+                Tools.chatSuccess("Successfully cleared item actions of held item!")
+            }
+
+            literal("nullify") runs {
+                val heldItem = checksumAndGetItem(source.player) ?: return@runs
+
+                val newCustomData = heldItem.get(DataComponentTypes.CUSTOM_DATA)?.copyNbt()
+                    ?: nbtCompound {  }
+
+                newCustomData["interact_data"] = "null"
+
+                Tools.chatSuccess("Successfully nullified item actions of held item!")
             }
         }
 
