@@ -188,7 +188,8 @@ object ItemEditorCommand {
                 val newCustomData = heldItem.get(DataComponentTypes.CUSTOM_DATA)?.copyNbt()
                     ?: nbtCompound {  }
 
-                newCustomData["interact_data"] = "null"
+                newCustomData["interact_data"] = ""
+                heldItem.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newCustomData))
 
                 Tools.chatSuccess("Successfully nullified item actions of held item!")
             }

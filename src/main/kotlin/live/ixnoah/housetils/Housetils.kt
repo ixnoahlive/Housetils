@@ -2,6 +2,7 @@ package live.ixnoah.housetils
 
 import live.ixnoah.housetils.command.CommandManager
 import live.ixnoah.housetils.config.ModConfig
+import live.ixnoah.housetils.feature.FeatureManager
 import net.fabricmc.api.ModInitializer
 import org.slf4j.LoggerFactory
 
@@ -11,5 +12,6 @@ object Housetils : ModInitializer {
 	val config = ModConfig.createAndLoad()
 	override fun onInitialize() {
 		CommandManager()
+		FeatureManager()
 	}
 }

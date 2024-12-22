@@ -16,14 +16,18 @@ repositories {
 dependencies {
 	minecraft("com.mojang", "minecraft", project.extra["minecraft_version"] as String)
 	mappings("net.fabricmc", "yarn", project.extra["yarn_mappings"] as String, null, "v2")
+
 	modImplementation("net.fabricmc", "fabric-loader", project.extra["loader_version"] as String)
 	modImplementation("net.fabricmc.fabric-api", "fabric-api", project.extra["fabric_version"] as String)
 	modImplementation("net.fabricmc", "fabric-language-kotlin", project.extra["fabric_language_kotlin_version"] as String)
-	modImplementation("eu.pb4", "placeholder-api", project.extra["placeholder_api_version"] as String)
+
+	include(modImplementation("eu.pb4", "placeholder-api", project.extra["placeholder_api_version"] as String))
+
 	modImplementation("net.silkmc", "silk-core", project.extra["silk_version"] as String)
 	modImplementation("net.silkmc", "silk-commands", project.extra["silk_version"] as String)
 	modImplementation("net.silkmc", "silk-nbt", project.extra["silk_version"] as String)
-	modImplementation("io.wispforest", "owo-lib", project.extra["owo_version"] as String)
+
+    modImplementation("io.wispforest", "owo-lib", project.extra["owo_version"] as String)
 	ksp("dev.kosmx.kowoconfig", "ksp-owo-config", project.extra["ksp_owo_config_version"] as String)
 }
 tasks {
